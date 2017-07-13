@@ -1,7 +1,7 @@
 /**
 Navier_Stokes_3D 
 2017-2017
-v 0.1.0
+v 0.1.1
 by Stan le Punk
 http://stanlepunk.xyz
 
@@ -51,33 +51,35 @@ public class Navier_Stokes_3D extends Navier_Stokes {
 
 /** 
 apply force
+v 0.0.2
 */
   public void apply_force(int cell_x, int cell_y, int cell_z, float vx, float vy, float vz) {
     cell_x += 1;
     cell_y += 1;
     cell_z += 1;
     int which_one = IX(cell_x, cell_y, cell_z) ;
+    if(which_one >= 0) {
+      if(which_one < s.length) {
+        float dx = s[which_one];
+        s[which_one] = (vx != 0) ? 
+        lerp(vx, dx, 0.85f) : 
+        dx;
+      }
 
-    if(which_one < s.length) {
-      float dx = s[which_one];
-      s[which_one] = (vx != 0) ? 
-      lerp(vx, dx, 0.85f) : 
-      dx;
-    }
+      if(which_one < t.length) {
+        float dy = t[which_one];
+        t[which_one] = (vy != 0) ? 
+        lerp(vy,dy, .85f) : 
+        dy;
+      }
 
-    if(which_one < t.length) {
-      float dy = t[which_one];
-      t[which_one] = (vy != 0) ? 
-      lerp(vy,dy, .85f) : 
-      dy;
-    }
-
-    if(which_one < p.length) {
-      float dz = p[which_one];
-      p[which_one] = (vz != 0) ? 
-      lerp(vz, dz, .85f) : 
-      dz;
-    }   
+      if(which_one < p.length) {
+        float dz = p[which_one];
+        p[which_one] = (vz != 0) ? 
+        lerp(vz, dz, .85f) : 
+        dz;
+      }
+    }      
   }
 
 

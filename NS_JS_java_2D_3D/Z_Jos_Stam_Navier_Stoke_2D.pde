@@ -1,7 +1,7 @@
 /**
 Navier_Stokes_2D
 2017-2017
-v 0.0.3
+v 0.0.3.1
 */
 
 public class Navier_Stokes_2D extends Navier_Stokes {
@@ -41,25 +41,28 @@ get
 
 /** 
 apply force
+v 0.0.3
 */
   public void apply_force(int cell_x, int cell_y, float vx, float vy) {
     cell_x += 1;
     cell_y += 1;
     int which_one = IX(cell_x, cell_y);
 
-    if(which_one < u.length) {
-      float dx = u[which_one];
-      u[which_one] = (vx != 0) ? 
-      lerp(vx,dx,.85f) : 
-      dx;
-    }
+    if(which_one >= 0) {
+      if(which_one < u.length) {
+        float dx = u[which_one];
+        u[which_one] = (vx != 0) ? 
+        lerp(vx,dx,.85f) : 
+        dx;
+      }
 
-    if(which_one < v.length) {
-      float dy = v[which_one];
-      v[which_one] = (vy != 0) ? 
-      lerp(vy,dy,.85f) : 
-      dy;
-    }   
+      if(which_one < v.length) {
+        float dy = v[which_one];
+        v[which_one] = (vy != 0) ? 
+        lerp(vy,dy,.85f) : 
+        dy;
+      }
+    } 
   }
 
 
