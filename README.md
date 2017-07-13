@@ -1,3 +1,11 @@
+<<<<<<< Updated upstream
+=======
+<<<<<<< HEAD
+Navier-Stokes Stable Fluid
+--
+Implementation 2D and 3D of the Navier-Stokes equation based on the Jos Stam's traduction.
+=======
+>>>>>>> Stashed changes
 
 Navier-Stokes implementation for Processing based on Jos Stam work
 --
@@ -20,3 +28,7 @@ https://github.com/BlainMaguire/3dfluid/blob/master/solver3d.c
 https://github.com/SatanWoo/Stable-Fluids-3D/blob/master/Stable%20Fluids%203D/Stable%20Fluids%203D/solver.c
 
 
+<<<<<<< Updated upstream
+=======
+>>>>>>> origin/master
+>>>>>>> Stashed changes

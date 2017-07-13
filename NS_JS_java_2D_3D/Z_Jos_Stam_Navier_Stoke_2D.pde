@@ -11,8 +11,8 @@ public class Navier_Stokes_2D extends Navier_Stokes {
   public Navier_Stokes_2D(int N) {
     super(N, 20, false);
   }
-  public Navier_Stokes_2D(int N, int solver_Iterations) {
-    super(N, solver_Iterations, false);
+  public Navier_Stokes_2D(int N, int iter) {
+    super(N, iter, false);
   }
 
 
@@ -68,36 +68,36 @@ apply force
 update
 */
   public void update(float dt, float visc, float diff) {
-    vel_step(u, v, u_prev, v_prev, visc, dt);
-    dens_step(dst, dst_prev, u, v, diff, dt);
+    vel_step(u, v, u_prev, v_prev, visc, dt, iter, N);
+    dens_step(dst, dst_prev, u, v, diff, dt, iter, N);
   }
-  private void vel_step(float[] u, float[] v, float[] u0, float[] v0, float visc, float dt) {
+  private void vel_step(float[] u, float[] v, float[] u0, float[] v0, float visc, float dt, int iter, int N) {
     // step 0
     add_source(u, u0, dt);
     add_source(v, v0, dt);
     // step 1
     SWAP(u0, u);
-    diffuse(1, u, u0, visc, dt);
+    diffuse(1, u, u0, visc, dt, iter, N);
     SWAP(v0, v);
-    diffuse(2, v, v0, visc, dt);
+    diffuse(2, v, v0, visc, dt, iter, N);
 
-    project(u, v, u0, v0);
+    project(u, v, u0, v0, iter, N);
 
     // step 2
     SWAP(u0, u);
     SWAP(v0, v);
-    advect(1, u, u0, u0, v0, dt);
-    advect(2, v, v0, u0, v0, dt);
-    project(u, v, u0, v0);
+    advect(1, u, u0, u0, v0, dt, N);
+    advect(2, v, v0, u0, v0, dt, N);
+    project(u, v, u0, v0, iter, N);
   }
 
 
-  private void dens_step(float[] x, float[] x0, float[] u, float[] v, float diff, float dt) {
+  private void dens_step(float[] x, float[] x0, float[] u, float[] v, float diff, float dt, int iter, int N) {
     add_source(x, x0, dt);
     SWAP(x0, x);
-    diffuse(0, x, x0, diff, dt);
+    diffuse(0, x, x0, diff, dt, iter, N);
     SWAP(x0, x);
-    advect(0, x, x0, u, v, dt);
+    advect(0, x, x0, u, v, dt, N);
   }
 
 
@@ -112,10 +112,10 @@ update
   /**
   diffusion
   */
-  private void diffuse(int b, float[] x, float[] x0, float diff, float dt) {
+  private void diffuse(int b, float[] x, float[] x0, float diff, float dt, int iter, int N) {
     float a = dt *diff *N *N;
     float c = 1 +4 *a ;
-    linear_solver(b, x, x0, a, c);
+    lin_solve(b, x, x0, a, c, iter, N);
   }
 
 
@@ -123,7 +123,7 @@ update
   /**
   advect
   */
-  private void advect(int b, float[] d, float[] d0, float[] u, float[] v, float dt) {
+  private void advect(int b, float[] d, float[] d0, float[] u, float[] v, float dt, int N) {
     int i, j;
     int  i0, j0;
     int i1, j1;
@@ -134,8 +134,8 @@ update
 
     for (i = 1; i <= N; i++) {
       for (j = 1; j <= N; j++) {
-        x = i - dt0 * u[IX(i, j)];
-        y = j - dt0 * v[IX(i, j)];
+        x = i - dt0 * u[IX(i,j)];
+        y = j - dt0 * v[IX(i,j)];
         //
         if (x < 0.5) x = 0.5;
         if (x > N +.5) x = N +.5;
@@ -158,13 +158,13 @@ update
         d[IX(i, j)] = s0 *(arg_0) +s1 *(arg_1);
       }
     }
-    set_bnd(b, d);
+    set_bnd(b, d, N);
   }
   /**
   boundary
+  v 0.0.2
   */
-  private void set_bnd(int b, float[] x) {
-
+  private void set_bnd(int b, float[] x, int N) {
     for (int i = 1; i <= N ; i++) {
       if(i <= N) {
         x[IX(0, i)] = b == 1 ? -x[IX(1, i)] : x[IX(1, i)];
@@ -188,8 +188,9 @@ update
 
   /**
   project
+  v 0.0.2
   */
-  private void project(float[] u, float[] v, float[] u0, float[] v0) {
+  private void project(float[] u, float[] v, float[] u0, float[] v0, int iter, int N) {
     float h = 1. / N;
     
     for (int i = 1; i <= N; i++) {
@@ -200,10 +201,10 @@ update
         u0[IX(i, j)] = 0;
       }
     }
-    set_bnd(0, v0);
-    set_bnd(0, u0);
+    set_bnd(0, v0, N);
+    set_bnd(0, u0, N);
 
-    linear_solver(0, u0, v0, 1, 4) ;
+    lin_solve(0, u0, v0, 1, 4, iter, N) ;
 
     for (int i = 1; i <= N; i++) {
       for (int j = 1; j <= N; j++) {
@@ -211,8 +212,8 @@ update
         v[IX(i,j)] -= .5 *(u0[IX(i,j+1)] -u0[IX(i,j-1)]) /h;
       }
     }
-    set_bnd(1, u);
-    set_bnd(2, v);
+    set_bnd(1, u, N);
+    set_bnd(2, v, N);
   }
 
 
@@ -220,11 +221,12 @@ update
 
 
 
-    /**
+  /**
   util
+  v 0.0.2
   */
-  private void linear_solver(int b, float[] x, float[] x0, float a, float c) {
-    for (int inc = 0; inc < solver_Iterations; inc++) {
+  private void lin_solve(int b, float[] x, float[] x0, float a, float c, int iter, int N) {
+    for (int inc = 0; inc < iter; inc++) {
       for (int i = 1; i <= N; i++) {
         for (int j = 1; j <= N; j++) {
           float step_1 = x[IX(i-1,j)] +x[IX(i+1,j)] 
@@ -233,13 +235,13 @@ update
           x[IX(i, j)] = step_2 /c;
         }
       }
-      set_bnd(b, x);
+      set_bnd(b, x, N);
     }
   }
 
   // method used to be 'static' since this class is not a top level type
-  private int IX(int i, int j) {
-    return i +(N+2) *j;
+  private int IX(int x, int y) {
+    return x +(N+2) *y;
   }
 
         // same applies to the swap operation ^^ 

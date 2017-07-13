@@ -1,7 +1,7 @@
 
 
 
-boolean three_dim_is = true ;
+boolean three_dim_is = false ;
 
 void setup() {
 	int size_cell = 10 ;
@@ -38,9 +38,10 @@ void draw() {
 	float viscosity = 0.01;
 	float diffusion = 0.01;
   
-  float z = cos(frameCount *.01) *height ;
+  float z = cos(frameCount *.01) *height *.5 ;
 	Vec3 pos = Vec3(mouseX, mouseY, z) ;
 	Vec3 size = Vec3(width, height, width) ;
+	// println(pos);
 
 	 if(three_dim_is) {
 	 	draw_solver_3D(pos, size, frequence, viscosity, diffusion);

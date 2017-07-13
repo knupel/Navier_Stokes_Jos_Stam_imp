@@ -1,17 +1,18 @@
 /**
-NAVIER STOKE 2D
-v 0.2.0
-Java implementation of the Navier-Stokes-Solver from
+NAVIER-STOKES
+v 0.3.0
+by Stan le Punk
+http://stanlepunk.xyz
+Processing implementation for Processing 3.3.5
+
+Java implementation of the Navier-Stokes-Solver based on the Jos Tam's work :
 http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
 
-Processing 3.3.5
-Processing impllementation by Stan le Punk
-http://stanlepunk.xyz/
+
 */
 abstract class Navier_Stokes {
-  // int M, O ;
   int N;
-  int solver_Iterations;
+  int iter;
   boolean three_Dimension_is ;
   float[] u, v ;
   float[] u_prev, v_prev ;
@@ -29,13 +30,13 @@ abstract class Navier_Stokes {
     build(N, 20, three_Dimension_is);
   }
 
-  Navier_Stokes(int N, int solver_Iterations, boolean three_Dimension_is) {
-    build(N, solver_Iterations, three_Dimension_is);
+  Navier_Stokes(int N, int iter, boolean three_Dimension_is) {
+    build(N, iter, three_Dimension_is);
   }
 
-  private void build(int N, int solver_Iterations, boolean three_Dimension_is) {
+  private void build(int N, int iter, boolean three_Dimension_is) {
     this.N = N ;
-    this.solver_Iterations = solver_Iterations ;
+    this.iter = iter ;
     this.three_Dimension_is = three_Dimension_is ;
 
     if(!three_Dimension_is) {
@@ -53,7 +54,6 @@ abstract class Navier_Stokes {
       t_prev = new float[num_cell];
       p_prev = new float[num_cell];
     }
-
     
     dst = new float[num_cell];
     dst_prev = new float[num_cell];
