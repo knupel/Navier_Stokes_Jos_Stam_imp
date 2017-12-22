@@ -8,6 +8,8 @@ Processing implementation for Processing 3.3.5
 Java implementation of the Navier-Stokes-Solver based on the Jos Tam's work :
 http://www.dgp.toronto.edu/people/stam/reality/Research/pdf/GDC03.pdf
 
+about Navier-Stoke and what's can be insolved by Navier-Stoke
+https://www.quantamagazine.org/mathematicians-find-wrinkle-in-famed-fluid-equations-20171221/
 
 */
 abstract class Navier_Stokes {

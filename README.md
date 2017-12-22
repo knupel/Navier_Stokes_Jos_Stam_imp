@@ -10,4 +10,8 @@ https://fr.wikipedia.org/wiki/Stable-Fluids
 
 http://www.dgp.toronto.edu/people/stam/reality/Talks/FluidsTalk/FluidsTalk_files/v3_document.htm
 
+About Navier-Stokes
+--
+https://www.quantamagazine.org/mathematicians-find-wrinkle-in-famed-fluid-equations-20171221/
+
 
