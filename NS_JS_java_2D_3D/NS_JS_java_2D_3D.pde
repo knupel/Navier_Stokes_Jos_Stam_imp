@@ -1,4 +1,10 @@
-
+/**
+SOLVER 2D/3D
+* @see https://github.com/StanLepunK
+v 0.2.0
+2016-2019
+Processing 3.5.2
+*/
 
 
 boolean three_dim_is = false ;
@@ -39,8 +45,8 @@ void draw() {
 	float diffusion = 0.01;
   
   float z = cos(frameCount *.01) *height *.5 ;
-	Vec3 pos = Vec3(mouseX, mouseY, z) ;
-	Vec3 size = Vec3(width, height, width) ;
+	vec3 pos = vec3(mouseX, mouseY, z) ;
+	vec3 size = vec3(width, height, width) ;
 	// println(pos);
 
 	 if(three_dim_is) {

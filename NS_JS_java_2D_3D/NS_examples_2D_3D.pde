@@ -1,5 +1,8 @@
 /**
 SOLVER 2D
+* @see https://github.com/StanLepunK
+v 0.2.0
+2016-2019
 */
 Navier_Stokes_2D ns_2D;
 
@@ -8,19 +11,19 @@ void set_solder_2D(int size_cell, int iteration) {
 }
 
 
-void draw_solver_2D(Vec p, Vec c, float frequence, float viscosity, float diffusion) {
-	Vec2 pos = Vec2(p.x,p.y) ;
-	Vec2 canvas = Vec2(c.x,c.y) ;
+void draw_solver_2D(vec p, vec c, float frequence, float viscosity, float diffusion) {
+	vec2 pos = vec2(p.x,p.y) ;
+	vec2 canvas = vec2(c.x,c.y) ;
   handle_pos(ns_2D, pos, canvas);
 
 	ns_2D.update(frequence, viscosity, diffusion);
 
 	stroke(216);
-	paintGrid(ns_2D, canvas);
+	show_grid(ns_2D, canvas);
 
-		float scale = 100;
+	float scale = 100;
 	stroke(0);
-	paintMotionVector(ns_2D, scale, canvas);
+	show_motion_vector(ns_2D, scale, canvas);
 }
 
 /**
@@ -35,20 +38,20 @@ void set_solder_3D(int size_cell, int iteration) {
 
 
 int pos_z ;
-void draw_solver_3D(Vec p, Vec c, float frequence, float viscosity, float diffusion) {
+void draw_solver_3D(vec p, vec c, float frequence, float viscosity, float diffusion) {
 
-	Vec3 pos = Vec3(p.x,p.y, p.z) ;
-	Vec3 canvas = Vec3(c.x, c.y, c.z) ;
+	vec3 pos = vec3(p.x,p.y, p.z) ;
+	vec3 canvas = vec3(c.x, c.y, c.z) ;
   handle_pos(ns_3D, pos, canvas);
 
 	ns_3D.update(frequence, viscosity, diffusion);
 
 	stroke(216);
-	paintGrid(ns_3D, canvas);
+	show_grid(ns_3D, canvas);
 
-		float scale = 100;
+	float scale = 100;
 	stroke(0);
-	paintMotionVector(ns_3D, scale, canvas);
+	show_motion_vector(ns_3D, scale, canvas);
 }
 
 
@@ -75,17 +78,17 @@ v 0.0.1
 */
 
 // int pos_x_0, pos_y_0, pos_z_0 ;
-Vec2 pos_2D_0 ;
-Vec3 pos_3D_0 ;
-void handle_pos(Navier_Stokes n, Vec p, Vec s) {
+vec2 pos_2D_0 ;
+vec3 pos_3D_0 ;
+void handle_pos(Navier_Stokes n, vec p, vec s) {
 	float limitVelocity = 100;
 
 	if(n instanceof Navier_Stokes_2D) {
 		Navier_Stokes_2D ns = (Navier_Stokes_2D)n ;
-		if(pos_2D_0 == null) pos_2D_0 = Vec2();
-		Vec2 size = Vec2(s.x,s.y);
-		Vec2 pos = Vec2(p.x,p.y);
-		Vec2 cell = size.div(ns.get_N());
+		if(pos_2D_0 == null) pos_2D_0 = vec2();
+		vec2 size = vec2(s.x,s.y);
+		vec2 pos = vec2(p.x,p.y);
+		vec2 cell = size.div(ns.get_N());
 
 		pos.x = max(1, pos.x);
 		pos.y = max(1, pos.y);
@@ -109,10 +112,10 @@ void handle_pos(Navier_Stokes n, Vec p, Vec s) {
 
 	} else if(n instanceof Navier_Stokes_3D) {
 		Navier_Stokes_3D ns = (Navier_Stokes_3D)n ;
-		if(pos_3D_0 == null) pos_3D_0 = Vec3();
-		Vec3 pos = Vec3(p.x,p.y,p.z);
-    Vec3 size = Vec3(s.x,s.y,s.z);
-		Vec3 cell = size.div(ns.get_N());
+		if(pos_3D_0 == null) pos_3D_0 = vec3();
+		vec3 pos = vec3(p.x,p.y,p.z);
+    vec3 size = vec3(s.x,s.y,s.z);
+		vec3 cell = size.div(ns.get_N());
 
 		pos.x = max(1, pos.x);
 		pos.y = max(1, pos.y);
@@ -145,9 +148,9 @@ void handle_pos(Navier_Stokes n, Vec p, Vec s) {
 
 
 /**
-paint vector field
+draw vector field
 */
-void paintMotionVector(Navier_Stokes n, float scale, Vec size) {
+void show_motion_vector(Navier_Stokes n, float scale, vec size) {
 	if(n instanceof Navier_Stokes_2D) {
 		Navier_Stokes_2D ns = (Navier_Stokes_2D)n ;
 
@@ -199,7 +202,7 @@ void paintMotionVector(Navier_Stokes n, float scale, Vec size) {
 	}
 }
 
-private void paintGrid(Navier_Stokes n, Vec size) {
+private void show_grid(Navier_Stokes n, vec size) {
 	if(n instanceof Navier_Stokes_2D) {
 		Navier_Stokes_2D ns = (Navier_Stokes_2D)n ;
 
@@ -219,11 +222,8 @@ private void paintGrid(Navier_Stokes n, Vec size) {
 			line(0, cell_h *i, size.x, cell_h *i);
 
 			line(cell_w *i, 0, cell_w *i, size.y);
-
 		}
-
-	}
-	
+	}	
 }
 
 
